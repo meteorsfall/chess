@@ -1,1 +1,73 @@
-Test
+<!DOCTYPE html>
+<html>
+<body>
+
+<!-- Images to use in canvas -->
+<div style="display: none">
+    <img id="chess_board" src="chess_board.bmp">
+    <img id="chess_pieces" src="chess_pieces.png">
+</div>
+
+<p>Canvas:</p>
+<canvas id="myCanvas" width="613" height="613" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script>
+window.onload = function() {
+    var board = [];
+
+    for(var i = 0; i < 8; i++){
+        var sub_board = [];
+        for(var j = 0; j < 8; j++){
+            sub_board.push({});
+        }
+        board.push(sub_board);
+    }
+
+    start_game = function() {
+        var home_row = ["rook", "knight", "bishop", "queen", "king", "bishop", "knight", "rook"];
+        for(var i = 0; i < 8; i++){
+            board[0][i] = {color: "white", type: home_row[i]};
+            board[1][i] = {color: "white", type: "pawn"};
+            board[6][i] = {color: "black", type: "pawn"};
+            board[7][i] = {color: "black", type: home_row[i]};
+        }
+    }
+
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    var chess_board_img = document.getElementById("chess_board");
+    var chess_pieces = document.getElementById("chess_pieces");
+    var piece_width = 537/7; 
+    var piece_height = 77;
+
+    draw_board = function(ctx) {
+        var sprite_map = {king: 0, queen: 1, rook: 2, bishop: 3, knight: 4, pawn: 5};
+        ctx.drawImage(chess_board_img, 0, 0);
+        for(var i = 0; i < 8; i++){
+            for(var j = 0; j < 8; j++){
+                if (board[i][j].type) {
+                    ctx.drawImage(
+                        chess_pieces,
+                        piece_width*sprite_map[board[i][j].type], 
+                        board[i][j].color == "black" ? 0 : piece_height,
+                        piece_width,
+                        piece_height, 
+                        piece_width*j,
+                        piece_height*(7-i),
+                        piece_width,
+                        piece_height
+                    );
+                }
+            }
+        }
+    }
+
+    start_game();
+    draw_board(ctx);
+}
+</script>
+
+</body>
+</html>
